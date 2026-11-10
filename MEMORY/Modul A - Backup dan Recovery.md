@@ -13,7 +13,7 @@ Modul A **berfungsi di Pi** (backup berjadual, restore dengan pengesahan hash, p
 | Tahan gangguan (klien tak boleh ubah backup) | Siap untuk prototype (repo di luar Nextcloud, root sahaja, tidak di-mount ke Docker) |
 | Pengesanan integriti (SHA-256) | Siap (manifest SHA-256 + `restic check`) |
 | Skrip pemulihan | Siap (per pengguna diuji; restore penuh + DB belum diuji) |
-| Storan USB | Belum (repo masih atas microSD, pindah ke SSD sebelum penilaian) |
+| Storan USB | Siap (SSD Transcend ESD310 128GB, ext4, mount `/srv/rg-backup`; data Nextcloud masih atas microSD) |
 | Arahan bekukan snapshot (untuk Modul B) | Siap (`rg-backup pin --before ...`) |
 
 ## Rekabentuk
@@ -37,23 +37,25 @@ Modul A **berfungsi di Pi** (backup berjadual, restore dengan pengesahan hash, p
 | Simulasi kerosakan 3 fail | 3/3 dikesan oleh manifest, 3/3 dipulihkan, 287/287 hash sepadan |
 | `restic check` (10% data) | tiada ralat |
 | Backup berjadual (systemd timer) | berjalan sendiri pukul 14:01 |
+| Backup tokokan atas SSD (10 Nov, 19:55) | 13 saat (repo ~497 MB) |
 
 Nota: ujian kerosakan dibuat terus pada fail (dd), bukan melalui simulator dan sync klien. Perlu diulang dengan simulator Haziq.
 
 ## Had semasa
 
-- Repo atas microSD yang sama dengan data (belum SSD), jadi angka masa/CPU belum mewakili setup akhir.
+- Repo kini atas SSD, tetapi data Nextcloud masih atas microSD. Backup penuh pertama atas SSD belum diukur (perlu repo baharu), dan CPU/RAM Pi belum diukur.
 - Maintenance mode menghentikan sync klien sepanjang backup (13 hingga 69 saat).
 - `--apply` menulis banyak fail serentak, jadi detector boleh trigger. Detector perlu dijeda semasa restore.
 - Restore penuh (tanpa `--user`, termasuk DB) belum diuji. `config.php` dibackup tetapi tidak dipulihkan automatik.
-- Folder staging `restore-*` terkumpul di `/srv/rg-backup` dan perlu dibersihkan.
+- Folder staging `restore-*` dan salinan lama repo di `/srv/rg-backup.old` (atas microSD) perlu dibersihkan selepas semuanya disahkan.
 
 ## Baki kerja
 
 - [ ] Haziq sambung `--snapshot-cmd` ke `rg-backup pin` (lihat [[Modul A - Arahan rg-backup]])
 - [ ] Ujian hujung ke hujung: simulator, detector, pin, restore, banding hash dengan `ujian_asal`
 - [ ] Uji restore penuh termasuk DB
-- [ ] Pindah repo ke USB SSD, ulang ukuran (masa backup/restore, saiz repo, CPU/RAM Pi)
+- [x] Pindah repo ke USB SSD (10 Nov)
+- [ ] Ulang ukuran atas SSD (backup penuh, restore, CPU/RAM Pi)
 - [ ] Ukuran dengan dataset lebih besar (fail video)
-- [ ] Bersihkan folder staging
+- [ ] Bersihkan folder staging dan `/srv/rg-backup.old`
 - [ ] Tulis bab Modul A untuk laporan

@@ -71,8 +71,13 @@ sudo rg-backup restore --snapshot <ID> --user cikgu1 --apply
 | `/srv/rg-backup/state/PINNED` | wujud bila beku |
 | `/root/.rg-restic-pass` | kata laluan repo (Faris simpan salinan; **jangan** letak dalam nota atau chat) |
 
+## Setup SSD (dibuat 10 Nov 2026)
+
+SSD Transcend ESD310 128GB (`sda`) diformat ext4 (label `RGBACKUP`) dan di-mount tetap ke `/srv/rg-backup` melalui `/etc/fstab` (`noatime,nofail`). Repo lama disalin dengan rsync; salinan asal kekal di `/srv/rg-backup.old` sehingga disahkan. SSD ini untuk backup sahaja; data Nextcloud kekal atas microSD.
+
 ## Perangkap yang pernah berlaku
 
 - `scp` dijalankan dari **PowerShell laptop**, bukan terminal Pi.
 - Jangan guna `restic tag` untuk pin: ia tukar ID snapshot dan fail PINNED jadi lapuk.
+- Jangan paip `rg-backup status` ke `head`: `restic` mati separuh jalan dan tinggalkan kunci basi. Gejala: `verify` atau `backup` lapor "repository is already locked"; snapshot jam masih wujud tetapi `metrics.csv` berhenti dan rotation tak jalan. Penyelesaian: `pgrep -a restic` (mesti kosong), kemudian `sudo restic -r /srv/rg-backup/repo --password-file /root/.rg-restic-pass unlock --remove-all`.
 - Selepas `scp`, semak versi di Pi: `sudo grep -c "clean-pinned" /usr/local/sbin/rg-backup` mesti `0`.
