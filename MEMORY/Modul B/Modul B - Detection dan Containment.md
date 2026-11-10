@@ -36,16 +36,35 @@ Prototype Modul B **berfungsi di Pi dan disahkan pada Nextcloud sebenar**: penge
 
 ## Setup (ringkas)
 
-- Raspberry Pi 4, microSD 64GB, Docker Compose: Nextcloud + MariaDB, `restart: unless-stopped`, trusted domains ditetapkan.
+- Raspberry Pi 4 (RAM 8GB), microSD 64GB untuk OS, SSD USB 128GB sebagai storan kedua. Pelan storan: Nextcloud atas microSD dengan dataset ujian kecil (beberapa ratus MB); SSD untuk data dan backup dengan dua partition (kira-kira 50GB untuk backup Nextcloud dan kira-kira 70GB untuk repo backup), Docker Compose: Nextcloud + MariaDB, `restart: unless-stopped`, trusted domains ditetapkan.
 - Akaun ujian: admin, cikgu1, Lecture 1, Megat, Ungku Megat (pelajar).
 - Pembolehubah env untuk alert: `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` (nilai **tidak** disimpan dalam nota). `chat_id` setiap pengguna dalam `contacts.json`. Guna `sudo -E` supaya env dikekalkan.
 - Nilai token dan kata laluan disimpan di Pi sahaja, bukan dalam vault.
 
+## Hasil ujian hook ke Modul A di Pi (10 Nov 2026, 23:08)
+
+Detector (dry-run) dengan `--snapshot-cmd` ke `rg-backup pin`; simulator mod full dari laptop pada folder sync cikgu1 (103 fail disimulasi).
+
+| Ukuran | Hasil |
+|---|---|
+| Alert pertama | skor 12 (rate, entropy, extension), 8 fail, kira-kira 2 saat selepas isyarat pertama |
+| Alert kedua | skor 24 (rate, extension), 10 fail |
+| Pin | `rc 0`, snapshot `1ae35049` (backup 23:00:54) dilindungi, backup dibekukan; pin kedua pilih snapshot yang sama |
+| Masa alert hingga pin | kira-kira 2 saat (log Modul A 23:08:05) |
+| `unpin` | 23:10:14, backup berjadual disambung semula |
+
+Perhatian:
+- Suspek (akaun, IP) **tidak dikenal pasti** semasa ujian ini: dashboard melapor "tiada aktiviti dalam log akses Nextcloud". Sedang disiasat (log Apache kosong atau IP Pi bertukar kepada 192.168.100.164).
+- Telegram tidak dihantar kerana pembolehubah persekitaran tidak ditetapkan dalam terminal detector.
+- Simulator habis menyulitkan 103 fail kerana mod dry-run tidak menghentikannya. Fail cikgu1 kini `.locked` dan perlu dipulihkan daripada snapshot `1ae35049`.
+
 ## Had dan baki kerja
 
-- [ ] Sambung `--snapshot-cmd` ke `rg-backup pin` (Modul A sudah sedia, lihat [[Modul A - Arahan rg-backup]]) dan ujian hujung ke hujung
+- [x] Hook `--snapshot-cmd` siap dalam detector (10 Nov), 7 ujian unit lulus, 13 senario `run_test.py` masih lulus
+- [ ] Uji hook dengan `rg-backup pin` sebenar di Pi dan ujian hujung ke hujung (simulator, alert, pin, restore, banding hash; lihat [[Modul A - Arahan rg-backup]])
 - [ ] Ulang ujian kerosakan Modul A menggunakan simulator dan sync klien sebenar
 - [ ] Jeda detector semasa restore Modul A
+- Keputusan 10 Nov (selepas bincang dengan Faris): **tangguh partition semula SSD** sehingga ujian hujung ke hujung siap; partition semula memadam repo dan menukar laluan data serentak di `docker-compose.yml`, `RG_NC_DIR` dan detector. Selepas itu partition (cadangan 55GB data dan 55GB repo, beri ruang kosong), ukur sebelum dan selepas untuk Bab 5. Jika dibuat dahulu: simpan salinan `metrics.csv`, maklum Faris, tambah `nofail` dalam fstab
 - [ ] Block IP kekal atau disable akaun dan revoke sesi
 - [ ] Ukur CPU dan RAM Pi
 - [ ] Ujian false positive lebih besar (fail video, muat naik pukal)

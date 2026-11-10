@@ -106,8 +106,15 @@ Setiap pengguna tekan *Start* pada bot dahulu, kemudian `chat_id` dimasukkan dal
 
 ## Sambungan ke Modul A
 
-Selepas alert, bekukan snapshot bersih (lihat [[Modul A - Arahan rg-backup]]):
+Detector panggil arahan pin Modul A sendiri bila alert tercetus (lihat [[Modul A - Arahan rg-backup]]). Tambah `--snapshot-cmd`:
 
 ```bash
-/usr/local/sbin/rg-backup pin --before "<masa_serangan_ISO8601>"
+sudo -E python3 detector.py --watch ~/nextcloud/data/<pengguna>/files --respond --contain --unblock-after 120 \
+    --contacts contacts.json --snapshot-cmd '/usr/local/sbin/rg-backup pin --before "{time}"'
 ```
+
+- `{time}` = masa isyarat serangan pertama tolak `--pin-margin` (lalai 5 saat), ISO 8601 dengan zon waktu. `{epoch}` = saat.
+- Hasil direkod dalam `events.jsonl` (`snapshot_pin`). Kod keluar 1 = tiada snapshot sebelum masa itu (backup kekal beku). Jika pin gagal, admin dapat Telegram.
+- Pin jalan dalam thread berasingan dan tak menghalang sekatan IP atau notifikasi.
+- Selepas pulih: `sudo rg-backup unpin`.
+- Ujian unit: `python3 test_snapshot_hook.py` (7 ujian, skrip pin palsu). **Belum diuji dengan `rg-backup` sebenar di Pi.**

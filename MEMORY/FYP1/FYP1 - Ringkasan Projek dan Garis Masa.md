@@ -71,7 +71,9 @@ Markah: progress 30% (minimum 5 pertemuan penyelia, 10% kehadiran taklimat), pem
 ## Tugasan seterusnya
 
 - [ ] Dapatkan senarai perubahan sebenar daripada Dr. Farahwahida
-- [ ] Draf methodology dan Gantt ikut fasa
+- [x] Draf methodology dan Gantt ikut fasa: lihat [[FYP1 - Draf Methodology dan Gantt]] (perlu semak dengan penyelia)
 - [ ] Kemas kini proposal dan slaid untuk defence minggu 6 hingga 7
-- [ ] Sambung Modul B ke `rg-backup pin` (Modul A sudah sedia), ujian hujung ke hujung dengan simulator
+- [x] Hook `--snapshot-cmd` ke `rg-backup pin` siap dan diuji dengan pin palsu (10 Nov)
+- [ ] Uji dengan `rg-backup` sebenar di Pi dan ujian hujung ke hujung dengan simulator
+- Partition semula SSD ditangguh sehingga ujian hujung ke hujung siap
 - [ ] Ukur CPU/RAM Pi dan ujian false positive lebih besar

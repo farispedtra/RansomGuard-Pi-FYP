@@ -7,6 +7,7 @@ Gambaran projek: lihat `README.md` di akar repo (D:\FYP 1).
 ## Projek
 - [[FYP1 - Ringkasan Projek dan Garis Masa]]: tajuk, penyelia, garis masa, keperluan handbook, perkara perlu dibetulkan
 - [[FYP1 - Cadangan Penambahbaikan]]: 18 penambahbaikan dan soal jawab penyelia
+- [[FYP1 - Draf Methodology dan Gantt]]: DSR, objektif, rancangan penilaian, model ancaman, Gantt (draf)
 
 ## Modul A: Backup dan Recovery (Faris)
 - [[Modul A - Backup dan Recovery]]: status, rekabentuk, hasil ujian, baki kerja
@@ -22,4 +23,4 @@ Gambaran projek: lihat `README.md` di akar repo (D:\FYP 1).
 - Folder `Lampiran`: Status Projek dan Cadangan Penambahbaikan (DOCX)
 
 ## Sambungan antara modul
-Selepas alert Modul B, detector panggil `rg-backup pin --before <masa>` (Modul A) untuk bekukan snapshot bersih. Belum disambung. Lihat baki kerja dalam kedua-dua nota modul.
+Selepas alert Modul B, detector panggil `rg-backup pin --before <masa>` (Modul A) untuk bekukan snapshot bersih. Hook `--snapshot-cmd` sudah ada dalam detector (diuji dengan pin palsu); belum diuji dengan `rg-backup` sebenar di Pi. Lihat baki kerja dalam kedua-dua nota modul.

@@ -1,6 +1,6 @@
 # Modul B: Detection dan Containment (Haziq)
 
-Status (10 Nov 2026): **berfungsi di Pi dan disahkan pada Nextcloud sebenar**. Sambungan ke Modul A (`rg-backup pin`) belum dipasang pada detector.
+Status (10 Nov 2026): **berfungsi di Pi dan disahkan pada Nextcloud sebenar**. Hook ke Modul A (`--snapshot-cmd`, memanggil `rg-backup pin`) sudah ada dalam detector dan lulus ujian unit, tetapi **belum diuji dengan `rg-backup` sebenar di Pi**.
 
 Kod ada dalam folder `ransomguard_prototype` (di Pi: `~/ransomguard`). Nota penuh ada dalam folder ini juga, mulakan dengan `Modul B - Arahan Command.md`.
 
@@ -48,13 +48,14 @@ Tambah `--contain --unblock-after 120` untuk sekatan IP sebenar. Senarai arahan 
 
 ## Sambung ke Modul A
 
-Selepas alert, panggil arahan ini dengan masa serangan bermula supaya snapshot bersih dibekukan:
+Beri `--snapshot-cmd` kepada detector, dan ia memanggil arahan pin sendiri selepas alert dengan masa serangan bermula:
 
 ```bash
-/usr/local/sbin/rg-backup pin --before "<masa_serangan_ISO8601>"
+sudo -E python3 detector.py --watch ~/nextcloud/data/<pengguna>/files --respond --contain --unblock-after 120 \
+    --contacts contacts.json --snapshot-cmd '/usr/local/sbin/rg-backup pin --before "{time}"'
 ```
 
-Detector sudah jalan sebagai root, jadi tak perlu `sudo`. Lihat `Modul A/README.md`.
+Detector sudah jalan sebagai root, jadi tak perlu `sudo` dalam arahan pin. Butiran dalam `Modul B - Arahan Command.md` dan `Modul A/README.md`.
 
 ## Peringatan
 
@@ -65,7 +66,8 @@ Detector sudah jalan sebagai root, jadi tak perlu `sudo`. Lihat `Modul A/README.
 
 ## Baki kerja
 
-- Sambung `--snapshot-cmd` ke `rg-backup pin` dan ujian hujung ke hujung dengan simulator
+- Uji `--snapshot-cmd` dengan `rg-backup pin` sebenar di Pi, kemudian ujian hujung ke hujung dengan simulator
+- Partition semula SSD ditangguh sehingga ujian hujung ke hujung siap
 - Ukur CPU dan RAM Pi, ujian false positive lebih besar (fail video, muat naik pukal)
 - Sekat akaun dan batal sesi (bukan IP sahaja), servis systemd untuk detector dan dashboard
 - Uji alert e-mel (SMTP belum diuji) dan tulis bab Modul B untuk laporan
