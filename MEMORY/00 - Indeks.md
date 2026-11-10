@@ -2,6 +2,8 @@
 
 Titik mula untuk vault ini. Kemas kini: 10 Nov 2026
 
+Gambaran projek: lihat `README.md` di akar repo (D:\FYP 1).
+
 ## Projek
 - [[FYP1 - Ringkasan Projek dan Garis Masa]]: tajuk, penyelia, garis masa, keperluan handbook, perkara perlu dibetulkan
 - [[FYP1 - Cadangan Penambahbaikan]]: 18 penambahbaikan dan soal jawab penyelia
@@ -9,7 +11,7 @@ Titik mula untuk vault ini. Kemas kini: 10 Nov 2026
 ## Modul A: Backup dan Recovery (Faris)
 - [[Modul A - Backup dan Recovery]]: status, rekabentuk, hasil ujian, baki kerja
 - [[Modul A - Arahan rg-backup]]: arahan, setup, perangkap
-- Kod: folder `Module A` (rg-backup.sh dan README untuk Haziq)
+- Kod: `rg-backup.sh` dan `README.md` (untuk Haziq) dalam folder Modul A
 
 ## Modul B: Detection dan Containment (Haziq)
 - [[Modul B - Detection dan Containment]]: status, komponen, isyarat pengesanan

@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Modul A/README.md",
+                "file": "Modul B/README.md",
                 "mode": "source",
                 "source": false
               },
@@ -190,11 +190,12 @@
   },
   "active": "383ba5d18b07f0f7",
   "lastOpenFiles": [
+    "Modul A/README.md",
+    "Modul B/README.md",
     "00 - Indeks.md",
     "README.md",
     "Modul A/Module A/README.md",
     "Modul A/rg-backup.sh",
-    "Modul A/README.md",
     "Modul B",
     "Modul A",
     "FYP1",
