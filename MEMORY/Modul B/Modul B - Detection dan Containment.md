@@ -79,6 +79,18 @@ Penemuan penting:
 - Sekatan DOCKER-USER hanya melindungi port Nextcloud (8080); dashboard (5000) kekal boleh dicapai dan perlu token kukuh.
 - Pin kedua pada 23:55 (alert susulan) memilih snapshot yang sama dan tidak merosakkan backup.
 
+## Dashboard SOC (reka bentuk semula, 11 Nov 2026)
+
+`dashboard.py` direka semula sebagai konsol SOC (HTML, CSS dan JS dalam satu fail, tanpa CDN, berfungsi di LAN tanpa internet):
+- Bar status: SISTEM SELAMAT, ALERT TERAKHIR, atau ANCAMAN DIKESAN (alert dalam 15 minit) dengan nama suspek dan IP.
+- Kad KPI: alert aktif, tulis fail 5 minit, pengguna, IP berbeza, peristiwa audit.
+- **Peta serangan langsung** (topologi): pelayan di tengah, setiap IP klien ialah nod. Hijau = aktif (tulis 60 s terakhir), merah berdenyut = suspek utama insiden aktif, oren dengan tanda X = IP disekat (dengan masa buka semula), kelabu = senyap. Peta dunia tidak digunakan kerana IP makmal persendirian tiada lokasi geografi.
+- Kad insiden (KRITIKAL jika canary atau skor 50 ke atas, selain itu TINGGI), carta tulis fail 30 minit, sumber IP teratas, panel lapisan pertahanan (daripada insiden terakhir), jadual aktiviti dengan tapisan.
+- Bahagian belakang: tambah `timeline`, `sources` (dengan `recent`), `blocked` dan `pin` setiap alert dalam `/api/data`; alert diisih ikut masa; hanya suspek teratas ditanda sebagai penyerang pada peta.
+- Had: padanan suspek ialah padanan masa dengan log akses, jadi klien lain yang menulis dalam tetingkap yang sama turut disenaraikan.
+- Status: diuji dengan data contoh dan ujian lama (8/8 serangan, 0/5 alarm palsu, 7/7 ujian hook); **belum diuji dengan data sebenar di Pi**.
+- Kosongkan alert untuk demo: simpan salinan `events.jsonl` dahulu, kemudian `sudo truncate -s 0 events.jsonl` dengan detector dihentikan.
+
 ## Had dan baki kerja
 
 - [x] Hook `--snapshot-cmd` siap dalam detector (10 Nov), 7 ujian unit lulus, 13 senario `run_test.py` masih lulus
@@ -91,5 +103,7 @@ Penemuan penting:
 - [ ] Ukur CPU dan RAM Pi
 - [ ] Ujian false positive lebih besar (fail video, muat naik pukal)
 - [ ] Uji alert e-mel (SMTP `RG_SMTP_*` belum diuji)
+- [ ] Pasang dashboard baharu di Pi dan sahkan peta dengan serangan sebenar; rakam skrin untuk slaid
+- [ ] Tukar token dashboard kepada token rawak dan tetapkan IP tetap untuk Pi
 - [ ] Servis systemd untuk detector dan dashboard
 - [ ] Tulis bab Modul B untuk laporan

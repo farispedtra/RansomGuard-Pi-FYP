@@ -80,6 +80,18 @@ sudo python3 dashboard.py --events events.jsonl --docker-dir ~/nextcloud --token
 # buka: http://<IP_Pi>:5000/?token=<TOKEN_DASHBOARD>
 ```
 
+Pasang versi baharu dari laptop (PowerShell), kemudian hentikan dan mulakan semula dashboard di Pi. Jana token rawak dengan `openssl rand -hex 8`:
+```powershell
+scp "<laluan_folder_prototype>\dashboard.py" <pengguna_pi>@<IP_Pi>:~/ransomguard/
+```
+
+Kosongkan alert (detector dihentikan, simpan salinan dahulu):
+```bash
+cd ~/ransomguard
+sudo cp events.jsonl ~/events-ujian.jsonl
+sudo truncate -s 0 events.jsonl
+```
+
 Mesti guna `sudo` (arahan docker) dan jalan dari folder yang sama dengan detector. Jika port 5000 sudah digunakan, tambah `--port`.
 
 ## Sekat dan buka IP
