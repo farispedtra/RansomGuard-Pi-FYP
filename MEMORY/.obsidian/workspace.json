@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Modul B/README.md",
+                "file": "FYP1/FYP1 - Draf Methodology dan Gantt.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "README"
+              "title": "FYP1 - Draf Methodology dan Gantt"
             }
           }
         ]
@@ -190,8 +190,8 @@
   },
   "active": "383ba5d18b07f0f7",
   "lastOpenFiles": [
-    "Modul A/README.md",
     "Modul B/README.md",
+    "Modul A/README.md",
     "00 - Indeks.md",
     "README.md",
     "Modul A/Module A/README.md",
