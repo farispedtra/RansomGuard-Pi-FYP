@@ -1,46 +1,69 @@
-# Modul A: Backup dan Recovery (Faris)
+# RansomGuard Pi
 
-Status (10 Nov 2026): **berfungsi di Pi**, belum disambung dengan detector Modul B.
+**A Raspberry Pi-Based Backup and Ransomware Early-Detection System for a Learning Center Cloud Server (Nextcloud)**
 
-Skrip: `rg-backup.sh` (di Pi: `/usr/local/sbin/rg-backup`). Nota penuh ada dalam folder `MEMORY/`, mulakan dengan `Modul A - Arahan rg-backup.md`.
+Projek Tahun Akhir 1 (IPB49804), BIT (Hons) Computer System Security, UniKL MIIT.
+Penyelia: Dr. Farahwahida. Pasukan: Haziq (Modul B) dan Tuan Muhammad Faris (Modul A).
 
-## Apa Haziq boleh buat sekarang
+## Apa projek ini
 
-1. **Sambung hook detector.** Bila detector kesan serangan, panggil arahan ini dengan masa serangan bermula (detector sudah jalan sebagai root, jadi tak perlu `sudo`):
+Pusat pembelajaran kecil biasanya simpan bahan guru dan kerja pelajar dalam satu pelayan awan peribadi. Kalau satu komputer pelajar atau guru dijangkiti ransomware, klien sync akan hantar fail yang dah dienkripsi ke pelayan, lalu merebak ke semua peranti yang disegerakkan.
 
-   ```
-   /usr/local/sbin/rg-backup pin --before "<masa_serangan_ISO8601>"
-   ```
+RansomGuard Pi ialah prototype murah atas Raspberry Pi 4 (8GB) yang menjalankan Nextcloud dalam Docker, dengan dua lapisan perlindungan:
 
-   Contoh masa: `2026-11-12T19:29:27+08:00` (epoch saat pun boleh). Ia **membekukan backup dan rotation**, dan mencetak ID snapshot bersih terakhir sebelum masa itu. Kalau tiada snapshot sebelum masa itu, exit code 1 dan backup kekal beku.
+1. **Kesan awal dan bendung** (Modul B): pantau perubahan fail, kenal pasti pengguna dan IP yang mencurigakan, sekat IP, dan hantar amaran.
+2. **Backup dan pulih** (Modul A): snapshot berjadual yang klien tak boleh ubah, dan pemulihan fail yang bersih.
 
-2. **Cuba arahan di terminal Pi:**
+## Bagaimana ia berfungsi
 
-   ```bash
-   rg-backup help
-   sudo rg-backup status
-   sudo rg-backup list
-   ```
+```
+Klien sync (guru/pelajar)  ->  Nextcloud (Docker, Raspberry Pi)
+                                  |                 |
+                          Modul B: detector     Modul A: rg-backup
+                          (pantau fail,         (restic, snapshot setiap jam,
+                           sekat IP, Telegram)   disimpan atas USB SSD)
+                                  |                 ^
+                                  +-- serangan dikesan: rg-backup pin --before <masa>
+                                      (bekukan snapshot bersih sebelum serangan)
+```
 
-3. **Ujian hujung ke hujung bersama:**
-   1. Pastikan sync selesai, kemudian `sudo rg-backup backup pre-attack`.
-   2. Jalankan simulator dan detector. Detector memanggil `pin`.
-   3. `sudo rg-backup status` mesti papar `BEKU`.
-   4. `sudo rg-backup restore --user cikgu1` (staging + sahkan hash), kemudian `--apply` untuk tampal balik.
-   5. Banding hash dengan `ujian_asal`, kemudian `sudo rg-backup unpin`.
+Sambungan antara dua modul (`pin`) sudah sedia di sisi Modul A, tetapi belum disambung ke detector.
 
-## Peringatan
+## Modul
 
-- **Jeda detector sebelum `restore --apply`.** Restore menulis banyak fail serentak, jadi detector boleh trigger.
-- Jangan paip `rg-backup status` ke `head`. `restic` mati separuh jalan dan tinggalkan kunci basi. Penyelesaian ada dalam nota `Modul A - Arahan rg-backup`.
-- Backup berjadual jalan setiap jam melalui systemd timer. Semasa beku (selepas `pin`), tiada backup baharu sehingga `rg-backup unpin`.
-- Repo backup di `/srv/rg-backup` (SSD, bukan dalam folder Nextcloud dan tidak di-mount ke Docker). Kata laluan repo hanya di Pi dan **tidak** dalam repositori ini.
+| Modul | Pemilik | Fungsi | Status (10 Nov 2026) |
+|---|---|---|---|
+| **A: Backup dan Recovery** | Faris | Backup berenkripsi dan berversi dengan restic (fail, dump DB, manifest SHA-256), pemulihan dengan pengesahan hash, pin/unpin snapshot | Berfungsi di Pi, hasil ujian awal ada |
+| **B: Detection dan Containment** | Haziq | Pengesanan (fail umpan, entropi, kadar perubahan, extension, magic number), sekat IP, alert Telegram, dashboard admin | Berfungsi dan disahkan pada Nextcloud sebenar, 13 senario ujian |
 
-## Hasil ujian setakat ini
+Hasil awal Modul A: backup penuh pertama 69 saat (1.056 GiB), backup tokokan 13 saat, pemulihan 287 fail dengan semua hash sepadan. Butiran dalam nota Modul A.
 
-| Ukuran | Hasil |
-|---|---|
-| Backup penuh pertama | 69 saat (data 1.056 GiB, repo ~489 MB) |
-| Backup tokokan | 13 saat |
-| Restore cikgu1 (287 fail) + sahkan hash | ~14 saat ke staging, ~20 saat `--apply` |
-| Simulasi kerosakan 3 fail | 3/3 dikesan, 3/3 dipulihkan, 287/287 hash sepadan |
+## Struktur repo
+
+```
+README.md                   fail ini
+MEMORY/                     vault Obsidian (semua nota projek)
+  00 - Indeks.md            indeks semua nota
+  FYP1/                     ringkasan projek, garis masa, cadangan penambahbaikan
+  Modul A/                  nota Modul A + skrip rg-backup.sh + README untuk Haziq
+  Modul B/                  nota Modul B (status, arahan, masalah dan penyelesaian)
+  Lampiran/                 dokumen DOCX (status projek, cadangan penambahbaikan)
+```
+
+Buka folder `MEMORY` sebagai vault Obsidian dan mulakan dari `00 - Indeks`.
+
+## Mula dari mana
+
+- Nak faham projek dan garis masa: `MEMORY/FYP1/FYP1 - Ringkasan Projek dan Garis Masa.md`
+- Nak jalankan atau sambung Modul A: `MEMORY/Modul A/README.md`
+- Nak jalankan Modul B: `MEMORY/Modul B/Modul B - Arahan Command.md`
+
+## Baki kerja utama
+
+- Sambung detector Modul B ke `rg-backup pin` dan buat ujian hujung ke hujung dengan simulator
+- Ukur CPU dan RAM Pi, ujian false positive lebih besar, dan ulang ujian pemulihan dengan klien sync sebenar
+- Methodology, Gantt, dan kemas kini proposal untuk defence (minggu 6 hingga 7)
+
+## Keselamatan
+
+Kata laluan repo backup, token Telegram dan alamat rangkaian Pi **tidak** disimpan dalam repo ini. Semuanya kekal di Pi sahaja. Simulator hanya jalan dalam folder ujian yang ada fail penanda, dan semua ujian dibuat di makmal sendiri.
