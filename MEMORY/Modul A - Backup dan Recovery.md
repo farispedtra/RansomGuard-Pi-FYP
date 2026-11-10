@@ -2,6 +2,7 @@
 
 Pemilik: Faris | Rakan kongsi: Haziq (Modul B) | Kemas kini: 10 Nov 2026
 Arahan lengkap: [[Modul A - Arahan rg-backup]]
+Modul B (pengesanan dan sekatan): [[Modul B - Detection dan Containment]]
 
 ## Status ringkas
 
