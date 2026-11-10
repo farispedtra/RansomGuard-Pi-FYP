@@ -27,6 +27,12 @@ Arahan: [[Modul B - Arahan Command]] | Ringkasan: [[Modul B - Detection dan Cont
 | Arahan gagal kerana `<placeholder>` | Placeholder ditaip literal | Ganti dengan nilai sebenar |
 | Telegram 404 | Token palsu atau salah | Guna token sebenar daripada BotFather |
 | Token terpapar dalam chat | Tersalah tampal | `/revoke` di @BotFather dan jana semula |
+| Restore semasa detector berjalan | Tulisan restore dikesan sebagai serangan, alert dan pin berulang | Hentikan detector sebelum `restore --apply` |
+| `.locked` muncul semula selepas restore | Klien sync laptop memuat naik salinan tempatan | Jeda sync, padam `.locked` di klien dahulu, kemudian di server |
+| `.locked` kekal selepas dipadam | Salinan dalam `files_trashbin` | `occ trashbin:cleanup <pengguna>` |
+| Peraturan DROP masih ada | Detector dihentikan sebelum pemasa unblock tamat | `iptables -D DOCKER-USER -s <IP>/32 -j DROP` |
+| `<ID>` atau nama tempat letak dalam arahan | Tempat letak ditaip literal | Ganti dengan nilai sebenar |
+| Token Telegram tidak ditetapkan | Token ditampal di hujung baris `read`, bukan di prompt | `read -rsp "Token: " VAR`, Enter, kemudian tampal token di prompt |
 
 ## Pengajaran reka bentuk
 

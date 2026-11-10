@@ -1,6 +1,6 @@
 # Modul B - Detection dan Containment
 
-Pemilik: Haziq | Rakan kongsi: Faris (Modul A) | Kemas kini: 10 Nov 2026
+Pemilik: Haziq | Rakan kongsi: Faris (Modul A) | Kemas kini: 11 Nov 2026
 Modul A: [[Modul A - Backup dan Recovery]] | Ringkasan projek: [[FYP1 - Ringkasan Projek dan Garis Masa]]
 Arahan: [[Modul B - Arahan Command]] | Masalah: [[Modul B - Masalah dan Penyelesaian]] | Penambahbaikan: [[FYP1 - Cadangan Penambahbaikan]]
 
@@ -58,12 +58,34 @@ Perhatian:
 - Telegram tidak dihantar kerana pembolehubah persekitaran tidak ditetapkan dalam terminal detector.
 - Simulator habis menyulitkan 103 fail kerana mod dry-run tidak menghentikannya. Fail cikgu1 kini `.locked` dan perlu dipulihkan daripada snapshot `1ae35049`.
 
+## Hasil ujian hujung ke hujung dengan block IP sebenar (10-11 Nov 2026, 23:51 hingga 00:14)
+
+Detector dengan `--respond --contain --unblock-after 120 --snapshot-cmd` pada folder cikgu1; simulator mod full dari laptop.
+
+| Ukuran | Hasil |
+|---|---|
+| Alert | skor 12 (rate, entropy, extension) pada 23:51:09, 8 fail |
+| Suspek | `cikgu1 @ 192.168.100.163` (25 tindakan), klien Windows Nextcloud, dikenal pasti daripada log audit |
+| Block IP | `blocked: true` melalui `iptables` DOCKER-USER; laptop tidak dapat buka `192.168.100.146:8080` (timeout) |
+| Pin | berjaya, snapshot bersih `1ae35049` (23:00:54) dibekukan, tiada snapshot auto selepas itu |
+| Restore | `rg-backup restore --snapshot 1ae35049 --user cikgu1 --apply`: 287 fail, semua hash SHA-256 sepadan, kira-kira 40 saat |
+| Telegram | tidak dihantar dalam larian ini (pembolehubah persekitaran tidak ditetapkan); sebelum ini disahkan berfungsi kepada admin dan cikgu1 |
+
+Penemuan penting:
+- Restore semasa detector berjalan mencetuskan alert palsu dan pin berulang: detector mesti dijeda atau ada mod penyelenggaraan.
+- Selepas restore, klien sync laptop memuat naik semula fail `.locked` tempatan. Prosedur pemulihan: jeda sync, padam `.locked` di klien, restore, kemudian sambung sync.
+- Fail `.locked` yang dipadam masuk ke tong sampah Nextcloud (`files_trashbin`); bersihkan dengan `occ trashbin:cleanup`, dan `occ files:scan` selepas padam di sistem fail.
+- Peraturan DROP boleh tertinggal jika detector dihentikan (Ctrl+C) sebelum pemasa auto-unblock tamat. Padam dengan `iptables -D DOCKER-USER -s <IP>/32 -j DROP`. Penyelesaian: unblock yang tahan lama (pemasa sistem atau unblock semasa detector dimulakan semula).
+- Sekatan DOCKER-USER hanya melindungi port Nextcloud (8080); dashboard (5000) kekal boleh dicapai dan perlu token kukuh.
+- Pin kedua pada 23:55 (alert susulan) memilih snapshot yang sama dan tidak merosakkan backup.
+
 ## Had dan baki kerja
 
 - [x] Hook `--snapshot-cmd` siap dalam detector (10 Nov), 7 ujian unit lulus, 13 senario `run_test.py` masih lulus
-- [ ] Uji hook dengan `rg-backup pin` sebenar di Pi dan ujian hujung ke hujung (simulator, alert, pin, restore, banding hash; lihat [[Modul A - Arahan rg-backup]])
+- [x] Uji hook dengan `rg-backup pin` sebenar di Pi dan ujian hujung ke hujung (simulator, alert, block IP, pin, restore, banding hash) lulus pada 10-11 Nov; lihat [[Modul A - Arahan rg-backup]]
+- [ ] Larian akhir dengan Telegram, block IP dan auto-unblock tanpa Ctrl+C pada detector
 - [ ] Ulang ujian kerosakan Modul A menggunakan simulator dan sync klien sebenar
-- [ ] Jeda detector semasa restore Modul A
+- [ ] Jeda detector semasa restore Modul A (disahkan perlu; lihat penemuan di atas)
 - Keputusan 10 Nov (selepas bincang dengan Faris): **tangguh partition semula SSD** sehingga ujian hujung ke hujung siap; partition semula memadam repo dan menukar laluan data serentak di `docker-compose.yml`, `RG_NC_DIR` dan detector. Selepas itu partition (cadangan 55GB data dan 55GB repo, beri ruang kosong), ukur sebelum dan selepas untuk Bab 5. Jika dibuat dahulu: simpan salinan `metrics.csv`, maklum Faris, tambah `nofail` dalam fstab
 - [ ] Block IP kekal atau disable akaun dan revoke sesi
 - [ ] Ukur CPU dan RAM Pi
