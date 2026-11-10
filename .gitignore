@@ -1,0 +1,10 @@
+# Hanya Module A dan MEMORY masuk repo
+/*
+!/.gitignore
+!/.gitattributes
+!/README.md
+!/Module A/
+!/MEMORY/
+# Tetapan Obsidian (tidak diupload)
+/MEMORY/.obsidian/
+/MEMORY/Welcome.md

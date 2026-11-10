@@ -16,6 +16,15 @@ Modul A **berfungsi di Pi** (backup berjadual, restore dengan pengesahan hash, p
 | Storan USB | Siap (SSD Transcend ESD310 128GB, ext4, mount `/srv/rg-backup`; data Nextcloud masih atas microSD) |
 | Arahan bekukan snapshot (untuk Modul B) | Siap (`rg-backup pin --before ...`) |
 
+## GitHub (10 Nov 2026)
+
+Repo private `farispedtra/RansomGuard-Pi-FYP`. Haziq sudah jadi collaborator dan sudah commit sekali.
+
+- `Module A/` = `rg-backup.sh` + `README.md` untuk Haziq (cara sambung hook `pin`, ujian hujung ke hujung). Untuk dijalankan.
+- `MEMORY/` = salinan nota vault ini. Untuk dibaca. Sengaja diasingkan supaya vault senang disalin ke sini dan boleh membesar (Modul B, bab laporan).
+- Fail diupload melalui web GitHub oleh Faris sendiri (upload melalui automasi pelayar disekat). Selepas ubah nota atau skrip, upload semula fail yang sama.
+- Sebelum kongsi vault dengan kawan: buang IP LAN Pi daripada nota Arahan.
+
 ## Rekabentuk
 
 - **Alat:** restic 0.18.0 (Raspberry Pi OS trixie, arm64). Repo berenkripsi, dedup, berversi.

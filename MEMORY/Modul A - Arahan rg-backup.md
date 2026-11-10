@@ -50,7 +50,7 @@ sudo rg-backup restore --snapshot <ID> --user cikgu1 --apply
 ## Pasang pada Pi baharu
 
 1. Hantar skrip dari laptop (PowerShell):
-   `scp "D:\FYP 1\Module A\rg-backup.sh" hafa@192.168.100.146:~`
+   `scp "D:\FYP 1\Module A\rg-backup.sh" <pengguna>@<IP_PI>:~`
 2. Di Pi:
    ```bash
    sudo apt install -y restic rsync
