@@ -2,7 +2,7 @@
 
 Status (10 Nov 2026): **berfungsi di Pi**, belum disambung dengan detector Modul B.
 
-Skrip: `rg-backup.sh` (di Pi: `/usr/local/sbin/rg-backup`). Nota penuh ada dalam folder `MEMORY/`, mulakan dengan `Modul A - Arahan rg-backup.md`.
+Skrip: `rg-backup.sh` (di Pi: `/usr/local/sbin/rg-backup`). Nota penuh ada dalam folder ini juga, mulakan dengan `Modul A - Arahan rg-backup.md`.
 
 ## Apa Haziq boleh buat sekarang
 
