@@ -1,8 +1,8 @@
 # FYP1 - Draf Methodology dan Gantt
 
-Ringkasan projek: [[FYP1 - Ringkasan Projek dan Garis Masa]] | Kemas kini: 10 Nov 2026
+Ringkasan projek: [[FYP1 - Ringkasan Projek dan Garis Masa]] | Kemas kini: 12 Nov 2026
 
-**Status: DRAF** berdasarkan handbook Bachelor of Cybersecurity (Sep 2026). Perubahan yang Dr. Farahwahida minta dalam proposal **belum dimasukkan** kerana belum dicatat. Semak dengan beliau sebelum defence (minggu 6 hingga 7). Sasaran angka di bawah ialah cadangan untuk dipersetujui, bukan keputusan.
+**Status: DRAF** berdasarkan handbook Bachelor of Cybersecurity (Sep 2026). Maklum balas ketua FYP (12 Nov) sudah dicatat dalam bahagian 10 dan dipetakan ke draf ini. Semak dengan Dr. Farahwahida sebelum defence (minggu 6 hingga 7). Sasaran angka di bawah ialah cadangan untuk dipersetujui, bukan keputusan.
 
 ## 1. Objektif (boleh diukur)
 
@@ -138,11 +138,71 @@ gantt
 - [ ] Jurang Bab 2 sepadan dengan Bab 3 (perlu 30 hingga 40 sumber, kini 5)
 - [ ] Rajah senibina dan carta alir sepadan dengan repo Git
 - [ ] Sasaran metrik dipersetujui dengan penyelia
-- [ ] Perubahan daripada Dr. Farahwahida dimasukkan
+- [ ] Tiga syarat maklum balas ketua FYP dimasukkan ke proposal (lihat bahagian 10)
 
 ## 9. Untuk dibincangkan dengan Dr. Farahwahida
 
-- Apakah perubahan yang beliau minta dalam proposal? (isi di sini)
+- Maklum balas "Accepted with conditions" (bahagian 10): adakah pendekatan jawapan kami diterima, dan adakah komen "Broken Access Control / vulnerable web application" memang dimaksudkan untuk projek ini?
 - Adakah DSR dengan Iterative and Incremental diterima?
 - Adakah sasaran metrik dan saiz sampel memadai?
 - Adakah bidang ini (ransomware, cloud security) sesuai dibimbing beliau, memandangkan senarai penyelia memaparkan tajuk computer vision?
+
+## 10. Maklum balas ketua FYP: Accepted with conditions (diterima 12 Nov 2026)
+
+Teks maklum balas (baris 235 dan 236, tajuk RansomGuard Pi, penyelia Dr. Farahwahida Abu Bakar):
+- Pelajar mesti pastikan sumbangan utama ialah **reka bentuk dan pengesahan mekanisme ujian keselamatan**, bukan sekadar membangunkan aplikasi web yang terdedah.
+- Perlu jelaskan 3 elemen kritikal: (1) liputan kelemahan: Broken Access Control yang diuji, dinilai **terlalu sedikit, perlu lebih**; (2) mekanisme pengesanan: bagaimana prototype menentukan akses sah atau tidak sah, dinilai **skop kecil**; (3) pengesahan keselamatan: bagaimana proses pengesahan dibuat, **perlu kajian lanjut dan LR**.
+
+**Semakan senarai projek (PDF, halaman 4):** nama kita ialah ID 235 (Faris) dan ID 236 (Haziq), penyelia Dr. Farahwahida Abu Bakar. Komen ialah satu sel yang merangkumi kedua-dua baris, jadi ia rasmi untuk kita. Tiga elemen yang sama (liputan, mekanisme pengesanan, pengesahan) turut muncul pada projek lain (baris 228 hingga 230, Broken Access Control), jadi besar kemungkinan templat yang dikongsi. Komen bersyarat lain menekankan sumbangan keselamatan mesti ditunjukkan melalui pelaksanaan dan ujian, dan ada yang menyebut skop kecil untuk dua ahli.
+
+**Perhatian:** komen tentang "Broken Access Control" dan "vulnerable web application" tidak sepadan dengan tajuk RansomGuard Pi (backup dan pengesanan awal ransomware). Besar kemungkinan templat atau komen daripada projek lain. Tanya Dr. Farahwahida atau ketua FYP secara sopan untuk mengesahkan, tetapi jawab niat di sebaliknya: sumbangan mesti ialah reka bentuk dan pengesahan mekanisme, dengan liputan, logik keputusan dan pengesahan yang jelas.
+
+| Syarat | Maksud untuk projek kita | Apa yang sudah ada | Apa yang perlu ditambah sebelum defence |
+|---|---|---|---|
+| Sumbangan utama | Mekanisme pengesanan, pembendungan dan pemulihan serta cara mengesahkannya, bukan sekadar sistem siap | Detector, responder, hook ke Modul A, simulator | Nyatakan dalam Bab 1 dan Bab 3 bahawa sumbangan ialah rekabentuk mekanisme dan kerangka pengesahan (DSR fasa 4 dan 5) |
+| 1. Liputan | Berapa banyak corak serangan dan senario normal diuji: "terlalu sedikit" | 13 senario (8 serangan, 5 normal) | Matriks ujian lebih besar (lihat bawah), sekurang-kurangnya 20 hingga 30 senario dengan larian berulang |
+| 2. Mekanisme pengesanan | Bagaimana sistem tentukan sah atau tidak sah, dan skop mesti lebih luas | Skor tetingkap 10 s (ambang 12), canary serta-merta, 5 isyarat, allow-list IP, suspek daripada log akses | Jadual keputusan rasmi, justifikasi ambang daripada baseline normal, profil asas setiap pengguna, kaitkan dengan T1486 |
+| 3. Pengesahan keselamatan | Bagaimana pengesahan dibuat, perlu LR | 8/8 dikesan, 0/5 alarm palsu, restore 287/287 hash OK, ujian hujung ke hujung 10 hingga 11 Nov | Reka bentuk eksperimen (hipotesis, ground truth, metrik, ancaman kesahihan), baseline, LR dikembangkan kepada 30 hingga 40 sumber termasuk kaedah pengesahan |
+
+### 10.1 Logik keputusan: sah atau tidak sah (cadangan untuk dimasukkan)
+
+Sistem tidak menilai kesahihan daripada log masuk sahaja. Akaun yang sah boleh dikawal penyerang (klien sync dirampas), jadi keputusan berdasarkan **tingkah laku fail** dalam tetingkap masa:
+
+| Keadaan | Keputusan |
+|---|---|
+| Fail canary disentuh | Tidak sah serta-merta (skor 100): alert, sekat IP, beku backup |
+| Skor 10 s mencapai 12 daripada kadar tulis, entropi tinggi, perubahan sambungan, magic number tidak sepadan | Tidak sah: alert dan pembendungan, jika sekurang-kurangnya 3 peristiwa tulis daripada IP itu |
+| Di bawah ambang, fail baharu dalam 5 s grace, IP dalam allow-list, nama sementara `.part` Nextcloud | Sah: tiada tindakan |
+| Alert tanpa suspek jelas (contoh pemulihan sebelah pelayan) | Alert sahaja, tiada IP disekat |
+
+Penambahbaikan untuk skop yang lebih luas: kalibrasi ambang daripada baseline normal (bukan angka tetap), profil kadar tulis normal setiap pengguna, korelasi lebih daripada satu IP, dan unit akaun (lumpuh akaun dan batal sesi) selain IP.
+
+### 10.2 Matriks ujian lebih besar (cadangan)
+
+| Kumpulan | Senario | Tujuan |
+|---|---|---|
+| Serangan | enkripsi penuh pantas, perlahan (kelewatan antara fail), separa (sebahagian blok), tukar nama sahaja, padam dan tulis semula, tulis ganti tanpa tukar sambungan, sentuh canary, padam pukal, serentak pada dua akaun, fail besar | Liputan corak T1486 dan cubaan mengelak |
+| Normal | muat naik pukal, fail video besar, ekstrak zip, simpan dokumen Office, sync awal akaun baharu, penyegerakan semula selepas luar talian | Kadar positif palsu |
+| Sistem | restore semasa detector berjalan, sync semula `.locked`, IP berubah | Kebolehpercayaan prosedur |
+
+Sasaran: sekurang-kurangnya 20 hingga 30 senario, setiap satu dengan larian berulang (cadangan 10 hingga 30), laporkan recall, FPR, masa pengesanan, fail terjejas, masa pembendungan, kadar pemulihan dan beban CPU/RAM dengan purata dan selang.
+
+### 10.3 Proses pengesahan keselamatan (untuk Bab 3 dan Bab 5)
+
+1. **Hipotesis:** sistem mengesan serangan dalam 10 fail atau kurang dan tidak menimbulkan alarm palsu pada senario normal yang diuji.
+2. **Ground truth:** setiap senario dilabel serangan atau normal sebelum dijalankan.
+3. **Metrik:** TPR (recall), FPR, masa pengesanan, fail terjejas, masa pembendungan dan pin, kadar pemulihan (hash), RPO dan RTO, CPU/RAM.
+4. **Baseline:** Nextcloud tanpa perlindungan, backup sahaja, pengesanan sahaja, sistem bersepadu.
+5. **Ancaman kesahihan:** simulator bukan ransomware sebenar, satu rangkaian makmal, sampel kecil; nyatakan dalam had.
+6. **LR:** tambah kajian tentang kaedah penilaian pengesanan ransomware dan dataset.
+
+### 10.4 Keutamaan penambahbaikan
+
+1. Bingkai sumbangan sebagai reka bentuk dan pengesahan mekanisme (Bab 1 dan slaid).
+2. Besarkan liputan ujian kepada 20 hingga 30 senario dengan larian berulang.
+3. Perjelas dan perluas mekanisme sah atau tidak sah; pilihan tambahan: tulisan ke folder bukan milik akaun, IP atau klien baharu, ambang dikalibrasi daripada baseline.
+4. Reka bentuk pengesahan dalam Bab 3 dan LR 15 hingga 20 sumber dahulu, kemudian 30 hingga 40.
+5. Tunjukkan pembahagian kerja dua ahli: Faris (backup, pemulihan, integriti), Haziq (pengesanan, pembendungan, dashboard), masing-masing dengan ujian dan metrik sendiri.
+6. Hantar mesej pengesahan kepada penyelia dan maklumkan Faris.
+
+Tindakan sebelum defence (16 hingga 30 Nov): kemas kini proposal dan slaid dengan tiga syarat, bina matriks ujian di `run_test.py`, jalankan eksperimen berulang, kembangkan LR.

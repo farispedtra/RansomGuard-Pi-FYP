@@ -14,10 +14,10 @@ Lain-lain: [[Modul B - Arahan Command]] | [[Modul B - Masalah dan Penyelesaian]]
 
 ## Status (10 Nov 2026)
 
-- Pertemuan penyelia 5 Nov: proposal okey tetapi ada perubahan. **Perubahan tepat belum dicatat di sini** (tambah bila diketahui).
+- Pertemuan penyelia 5 Nov: proposal okey tetapi ada perubahan. **12 Nov: maklum balas ketua FYP diterima, "Accepted with conditions"**: sumbangan utama mesti reka bentuk dan pengesahan mekanisme ujian keselamatan, dan 3 elemen perlu dijelaskan: liputan (terlalu sedikit), mekanisme pengesanan sah atau tidak sah (skop kecil), pengesahan keselamatan (perlu kajian lanjut dan LR). Komen menyebut Broken Access Control dan aplikasi web terdedah, yang tidak sepadan dengan tajuk kita: sahkan dengan penyelia. Butiran dan jawapan: [[FYP1 - Draf Methodology dan Gantt]] bahagian 10.
 - Penyelia mahu lihat prototype.
 - Modul B: prototype berfungsi (lihat nota Modul B).
-- Modul A (Faris): berfungsi di Pi, repo `farispedtra/RansomGuard-Pi-FYP` (private, Haziq collaborator). Antara muka `rg-backup pin --before MASA` sedia. Belum disambung dengan detector.
+- Modul A (Faris): berfungsi di Pi, repo `farispedtra/RansomGuard-Pi-FYP` (private, Haziq collaborator). Antara muka `rg-backup pin --before MASA` sedia. Disambung dengan detector melalui hook dan diuji hujung ke hujung pada 10 hingga 11 Nov.
 - Status Projek 7 Nov (dokumen lama) menyatakan Modul A belum bermula; sudah lapuk, rujuk nota Modul A.
 
 ## Garis masa FYP1 (Oktober 2026)
@@ -70,7 +70,10 @@ Markah: progress 30% (minimum 5 pertemuan penyelia, 10% kehadiran taklimat), pem
 
 ## Tugasan seterusnya
 
-- [ ] Dapatkan senarai perubahan sebenar daripada Dr. Farahwahida
+- [x] Senarai perubahan diterima 12 Nov (3 syarat): lihat draf bahagian 10
+- [ ] Sahkan dengan Dr. Farahwahida bahawa komen Broken Access Control memang untuk projek ini
+- [ ] Bina matriks ujian lebih besar (20 hingga 30 senario, larian berulang) dan jadual keputusan sah atau tidak sah
+- [ ] Kembangkan LR kepada 30 hingga 40 sumber termasuk kaedah pengesahan
 - [x] Draf methodology dan Gantt ikut fasa: lihat [[FYP1 - Draf Methodology dan Gantt]] (perlu semak dengan penyelia)
 - [ ] Kemas kini proposal dan slaid untuk defence minggu 6 hingga 7
 - [x] Hook `--snapshot-cmd` ke `rg-backup pin` siap dan diuji dengan pin palsu (10 Nov)
